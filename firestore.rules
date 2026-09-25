@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidId(id) {
+      return id is string && id.size() > 0;
+    }
+
+    function isValidOrcamentoSalvo(data) {
+      return data.descricao is string 
+        && data.codigo is string
+        && data.tipo_produto is string
+        && data.dimensoes is string
+        && data.material is string
+        && data.cores_quantidade is number
+        && data.markup is number
+        && data.resultados is list;
+    }
+
+    match /produtosModelos/{id} {
+      allow read, write: if isValidId(id);
+    }
+
+    match /custosInsumos/{id} {
+      allow read, write: if isValidId(id);
+    }
+
+    match /roteirosProducao/{id} {
+      allow read, write: if isValidId(id);
+    }
+
+    match /servicosPostoTrabalho/{id} {
+      allow read, write: if isValidId(id);
+    }
+
+    match /orcamentosSalvos/{id} {
+      allow read, write: if isValidId(id);
+    }
+
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

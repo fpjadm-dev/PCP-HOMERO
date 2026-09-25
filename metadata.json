@@ -1,0 +1,6 @@
+{
+  "name": "PCP Homero Embalagens",
+  "description": "Sistema de Planejamento e Controle de Produção (PCP) para a indústria de embalagens Homero Embalagens.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

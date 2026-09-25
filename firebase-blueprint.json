@@ -1,0 +1,234 @@
+{
+  "entities": {
+    "Cliente": {
+      "title": "Cliente",
+      "description": "Cadastro de clientes para faturamento e ordens",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "contato": { "type": "string" },
+        "email": { "type": "string" },
+        "telefone": { "type": "string" },
+        "codigo": { "type": "string" }
+      },
+      "required": ["id", "nome", "contato", "email", "telefone"]
+    },
+    "Pedido": {
+      "title": "Pedido",
+      "description": "Cadastro de ordens/pedidos de venda",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "cliente_id": { "type": "string" },
+        "data_entrega": { "type": "string", "format": "date" },
+        "status": { "type": "string", "enum": ["pendente", "producao", "concluido", "cancelado"] },
+        "prioridade": { "type": "string", "enum": ["alta", "media", "baixa"] },
+        "data_criacao": { "type": "string", "format": "date" },
+        "prioridade_sequencia": { "type": "number", "description": "Prioridade de sequenciamento de produção" }
+      },
+      "required": ["id", "cliente_id", "data_entrega", "status", "prioridade", "data_criacao"]
+    },
+    "Produto": {
+      "title": "Produto",
+      "description": "Itens de produto vinculados a um pedido",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "pedido_id": { "type": "string" },
+        "descricao": { "type": "string" },
+        "quantidade": { "type": "number" },
+        "dimensoes": { "type": "string" },
+        "material": { "type": "string" },
+        "fator_consumo": { "type": "number" },
+        "roteiro": { "type": "array" },
+        "maquina_atual_idx": { "type": "number" },
+        "medida_faca": { "type": "string" },
+        "informacoes_importantes": { "type": "string", "description": "Informações importantes e observações técnicas da ficha técnica" }
+      },
+      "required": ["id", "pedido_id", "descricao", "quantidade", "dimensoes", "material", "fator_consumo", "roteiro", "maquina_atual_idx"]
+    },
+    "ProdutoModelo": {
+      "title": "ProdutoModelo",
+      "description": "Catálogo reutilizável de fichas técnicas dos produtos (modelos)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "descricao": { "type": "string" },
+        "dimensoes": { "type": "string" },
+        "material": { "type": "string" },
+        "fator_consumo": { "type": "number" },
+        "roteiro": { "type": "array" },
+        "codigo": { "type": "string" },
+        "medida_faca": { "type": "string" },
+        "informacoes_importantes": { "type": "string", "description": "Informações importantes e observações técnicas da ficha técnica" }
+      },
+      "required": ["id", "descricao", "dimensoes", "material", "fator_consumo", "roteiro"]
+    },
+    "Maquina": {
+      "title": "Maquina",
+      "description": "Ativo produtivo/máquina com capacidades e custos",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "tipo": { "type": "string", "enum": ["Impressão", "Corte", "Acabamento"] },
+        "capacidade_hora": { "type": "number" },
+        "status_atual": { "type": "string", "enum": ["operando", "parada", "manutencao", "ociosa"] },
+        "codigo": { "type": "string" },
+        "custo_setup": { "type": "number" },
+        "custo_hora": { "type": "number" },
+        "valor_aquisicao": { "type": "number" },
+        "vida_util_anos": { "type": "number" },
+        "depreciacao_mensal": { "type": "number" },
+        "operador_id": { "type": "string" },
+        "participa_rateio": { "type": "boolean" },
+        "horas_mensais_custo_fixo": { "type": "number" }
+      },
+      "required": ["id", "nome", "tipo", "capacidade_hora", "status_atual"]
+    },
+    "Operador": {
+      "title": "Operador",
+      "description": "Quadro de operadores produtivos",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "turno": { "type": "string", "enum": ["Manhã", "Tarde", "Noite"] },
+        "custo_hora": { "type": "number" },
+        "custo_mensal": { "type": "number" },
+        "cargo": { "type": "string" }
+      },
+      "required": ["id", "nome", "turno"]
+    },
+    "Insumo": {
+      "title": "Insumo",
+      "description": "Itens de suprimento / insumo em estoque",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "tipo": { "type": "string", "enum": ["papel_cartao", "tinta", "cola", "verniz", "outro"] },
+        "unidade": { "type": "string", "enum": ["folhas", "litros", "unidades"] },
+        "estoque_atual": { "type": "number" },
+        "estoque_minimo": { "type": "number" },
+        "fornecedor": { "type": "string" },
+        "codigo": { "type": "string" }
+      },
+      "required": ["id", "nome", "tipo", "unidade", "estoque_atual", "estoque_minimo", "fornecedor"]
+    },
+    "Appnto": {
+      "title": "Appnto",
+      "description": "Histórico de apontamentos de produção e paradas",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "maquina_id": { "type": "string" },
+        "operador_id": { "type": "string" },
+        "produto_id": { "type": "string" },
+        "data_inicio": { "type": "string" },
+        "data_fim": { "type": "string" },
+        "quantidade_produzida": { "type": "number" },
+        "quantidade_refugo": { "type": "number" },
+        "tempo_parado": { "type": "number" },
+        "motivo_parada": { "type": "string" }
+      },
+      "required": ["id", "maquina_id", "operador_id", "produto_id", "data_inicio", "data_fim", "quantidade_produzida", "quantidade_refugo", "tempo_parado"]
+    },
+    "KanbanItem": {
+      "title": "KanbanItem",
+      "description": "Item de produção na esteira kanban por etapa/máquina",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "produto_id": { "type": "string" },
+        "maquina_id": { "type": "string" },
+        "ordem": { "type": "number" },
+        "status": { "type": "string", "enum": ["aguardando", "em_processo", "concluido"] },
+        "data_entrada": { "type": "string" },
+        "data_saida": { "type": "string" },
+        "prioridade_sequencia": { "type": "number", "description": "Prioridade de sequenciamento de produção" }
+      },
+      "required": ["id", "produto_id", "maquina_id", "ordem", "status", "data_entrada"]
+    },
+    "InsumoMovimento": {
+      "title": "InsumoMovimento",
+      "description": "Extrato de movimentações (entradas/saídas) de estoque",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "insumo_id": { "type": "string" },
+        "tipo": { "type": "string", "enum": ["entrada", "saida"] },
+        "quantidade": { "type": "number" },
+        "data": { "type": "string" },
+        "motivo": { "type": "string" },
+        "produto_id": { "type": "string" }
+      },
+      "required": ["id", "insumo_id", "tipo", "quantidade", "data", "motivo"]
+    },
+    "CustoGeral": {
+      "title": "CustoGeral",
+      "description": "Cadastro de despesas e custos gerais fixos",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "descricao": { "type": "string" },
+        "valor": { "type": "number" },
+        "recorrencia": { "type": "string", "enum": ["Mensal", "Anual", "Único"] },
+        "categoria": { "type": "string", "enum": ["Aluguel", "Energia S/A", "Água/Saneamento", "Pro-labore/Adm", "Seguros", "Manutenção Geral", "Internet/Nuvem", "Outros"] },
+        "data_vencimento": { "type": "string" }
+      },
+      "required": ["id", "descricao", "valor", "recorrencia", "categoria"]
+    },
+    "TaxasLucroPresumido": {
+      "title": "TaxasLucroPresumido",
+      "description": "Parâmetros globais de impostos e taxas de lucro presumido",
+      "type": "object",
+      "properties": {
+        "pis": { "type": "number" },
+        "cofins": { "type": "number" },
+        "iss": { "type": "number" },
+        "irpj": { "type": "number" },
+        "csll": { "type": "number" }
+      },
+      "required": ["pis", "cofins", "iss", "irpj", "csll"]
+    },
+    "OrcamentoSalvo": {
+      "title": "OrcamentoSalvo",
+      "description": "Orçamentos de produtos salvos com cálculos de preços de venda por lote, fotos e observações",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "codigo": { "type": "string" },
+        "descricao": { "type": "string" },
+        "dimensoes": { "type": "string" },
+        "material": { "type": "string" },
+        "cores_quantidade": { "type": "number" },
+        "tipo_produto": { "type": "string" },
+        "contatos_faca": { "type": "number" },
+        "medida_papel_facas": { "type": "string" },
+        "markup": { "type": "number" },
+        "data_criacao": { "type": "string" },
+        "observacoes": { "type": "string" },
+        "fotos": { "type": "array" },
+        "resultados": { "type": "array" }
+      },
+      "required": ["id", "descricao", "data_criacao", "resultados"]
+    }
+  },
+  "firestore": {
+    "clientes": { "schema": "Cliente", "description": "Clientes da distribuidora/gráfica" },
+    "pedidos": { "schema": "Pedido", "description": "Pedidos de venda gerais" },
+    "produtos": { "schema": "Produto", "description": "Itens de produto vinculados aos pedidos" },
+    "produtosModelos": { "schema": "ProdutoModelo", "description": "Fichas técnicas padrão dos produtos cadastrados" },
+    "maquinas": { "schema": "Maquina", "description": "Maquinários da esteira fabril" },
+    "operadores": { "schema": "Operador", "description": "Lista de funcionários operadores" },
+    "insumos": { "schema": "Insumo", "description": "Suprimentos em estoque das máquinas" },
+    "apontamentos": { "schema": "Appnto", "description": "Registros de apontamento de paradas e produção" },
+    "kanban": { "schema": "KanbanItem", "description": "Posição dos produtos na esteira kanban" },
+    "movimentos": { "schema": "InsumoMovimento", "description": "Log das movimentações fiscais de entradas e saídas de estoque" },
+    "custosGerais": { "schema": "CustoGeral", "description": "Lançamento de despesas e custos operacionais" },
+    "settings": { "schema": "TaxasLucroPresumido", "description": "Documentos contendo configurações gerais da aplicação" },
+    "orcamentosSalvos": { "schema": "OrcamentoSalvo", "description": "Histórico de orçamentos e produtos orçados com fotos anexas" }
+  }
+}
